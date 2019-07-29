@@ -2,31 +2,54 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Advert from './Advert';
 
-export default class AdvertsField extends React.Component {
+import './styles/AdvertsField.scss';
 
-    constructor(props) {
+export default class AdvertsField extends React.Component {
+    /* constructor(props) {
         super(props);
         this.state = {
-          adverts: []
+          adverts: [],
+          sellers: []
         };
-      }
+      } */
 
     static propTypes = {
         adverts: PropTypes.array,
+        sellers: PropTypes.array,
     }
 
-
+    findSellerByID= (idSeller) => {
+        let arr = this.props.sellers.find(seller => seller.id === idSeller);    
+        return (arr !== undefined) ? arr : {err: 'Пользователь не найден'}; // в БД id  уникальны
+    }
 
     render() {
-        //console.log(this.props.adverts); 
-        const {adverts} = this.props;
-        return  <div className="window"> 
-        Это Поле объявлений!
-        <Advert 
-            title = {adverts[0].title}
-            id = {adverts[0].id}
-        />
-        </div>
+        const {adverts, sellers} = this.props;
+        // TODO пока вывод первых 10 элементов, потом сделать фильтры
+        let adverts10 = adverts.slice(1,10);
+
+        const advertElements = [];
+        adverts10.forEach((advert, index) => {
+            let seller = this.findSellerByID(advert['relationships']['seller']);
+            let advertElem = <div key={index} className='advert'>
+                            <Advert 
+                            title = {advert.title}
+                            id = {advert.id}
+                            price = {advert.price}
+                            pictures = {advert.pictures}
+                            category = {advert.category}
+                            sellerName = {seller.name}
+                            sellerRating = {seller.rating}
+                            />
+                        </div>;
+
+            advertElements.push(advertElem);
+        });
+
+        return  <div className="advertsField">
+
+            {advertElements} 
+            </div>
     }
 
     
