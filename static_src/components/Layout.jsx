@@ -1,14 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import AdvertsField from './AdvertsField';
 
-const styles = {
-    window: {
-        display: "flex"
-    },
-};
-
+import './styles/Layout.scss';
 export default class Layout extends React.Component {
 
     constructor(props) {
@@ -16,53 +10,40 @@ export default class Layout extends React.Component {
         this.state = {
           error: null,
           isLoaded: false,
-          adverts: []
+          adverts: [],
+          sellers: [],
         };
       }
 
       componentDidMount() {
-        fetch("https://avito.dump.academy/products")
-          .then(res => res.json())
-          .then(
-            (result) => {
-              this.setState({
-                isLoaded: true,
-                adverts: result.data
-              });
-            },
-            // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-            // чтобы не перехватывать исключения из ошибок в самих компонентах.
-            (error) => {
-              this.setState({
-                isLoaded: true,
-                error
-              });
-            }
-          )
+          const urls = ["https://avito.dump.academy/products", "https://avito.dump.academy/sellers"];
+          
+          Promise.all(urls.map(u=>fetch(u))).then(responses =>
+            Promise.all(responses.map(res => res.json()))
+            ).then(texts => {
+                this.setState({
+                    isLoaded: true,
+                    adverts: texts[0].data,
+                    sellers: texts[1].data
+                  });
+            })
       }
     
       render() {
-        const { error, isLoaded, adverts } = this.state;
+        const { error, isLoaded, adverts, sellers } = this.state;
         if (error) {
           return <div>Ошибка: {error.message}</div>;
         } else if (!isLoaded) {
           return <div>Загрузка...</div>;
         } else {
-            console.log(adverts[0]);
           return (
+              <div className='layoutPosition'>
             <AdvertsField 
-                adverts = { adverts}
-            />            
+                adverts = {adverts}
+                sellers = {sellers}
+            />  
+            </div>          
           );
         }
       }
-    
-    /* static propTypes = {
-        idChat: PropTypes.number,    
-    };
-
-    static defaultProps = {
-        idChat: 1,
-    };
- */
 }
