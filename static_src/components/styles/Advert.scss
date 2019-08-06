@@ -1,3 +1,5 @@
+@import url(//fonts.googleapis.com/css?family=Open+Sans:600,400&subset=latin,cyrillic);
+
 .advert {
     border: 1px solid rgb(88, 80, 80);
     padding: 5px;
@@ -5,4 +7,12 @@
 
 .advert-main-picture {
     width: 100%;
+}
+
+.fa-star__my-style {
+    width: 15px;
+    color: lightgray;
+    &:hover {
+        cursor: pointer;
+    }
 }
