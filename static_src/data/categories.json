@@ -1,0 +1,22 @@
+ [{
+            "name": "immovable",
+            "id": 11,
+            "header": "недвижимость"
+        },
+        {
+            "name": "cameras",
+            "id": 12,
+            "header": "фотоаппараты"
+        },
+        {
+            "name": "auto",
+            "id": 13,
+            "header": "автомобили"
+        },
+        {
+            "name": "laptops",
+            "id": 14,
+            "header": "ноутбуки"
+        }
+ ]
+
